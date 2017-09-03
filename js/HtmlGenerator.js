@@ -4,6 +4,7 @@
  *  This library allows you to easily generate all kinds of HTML elements using JavaScript and jQuery.
  *  Notice: ECMAScript6 is required!
  *
+ * TODO: Support for <rt>, <rp>, <ruby>, [<table>, <tbody>, <td>, <tfoot>, <th>, <thead>, <tr>]
  */
 //region CONSTRUCTOR
 function HtmlGenerator() {
@@ -117,6 +118,7 @@ HtmlGenerator.elementTypes = {
     nav: 'nav',
     noScript: 'noscript',
     object: 'object',
+    output: 'output',
     select: {
         select: 'select',
         option: 'option',
@@ -127,7 +129,7 @@ HtmlGenerator.elementTypes = {
     picture: 'picture',
     pre: 'pre',
     progress: 'progress',
-    quote: 'q',
+    q: 'q',
     rp: 'rp',
     rt: 'rt',
     ruby: 'ruby',
@@ -430,7 +432,7 @@ HtmlGenerator.generateAside = (parent, id, clazz, appendFlag, attributes = {}) =
 };
 //endregion
 
-//region AUDIO AND SOURCE TAG
+//region AUDIO, TRACK, VIDEO AND SOURCE TAGS
 /**
  *
  * @param parent
@@ -441,9 +443,27 @@ HtmlGenerator.generateAside = (parent, id, clazz, appendFlag, attributes = {}) =
  * @param sources
  * @returns {*}
  */
-HtmlGenerator.generateAudio = (parent, id, clazz, appendFlag, attributes = {}, sources = {}) => {
+HtmlGenerator.generateAudio = (parent, id, clazz, appendFlag, attributes = {}, sources = {}, tracks = {}) => {
     let audio = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.audio, id, clazz, appendFlag, attributes);
     HtmlGenerator.generateInnerElements(audio, null, true, sources, HtmlGenerator.generateSource);
+    HtmlGenerator.generateInnerElements(audio, null, true, tracks, HtmlGenerator.generateTrack);
+    return audio;
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param sources
+ * @returns {*}
+ */
+HtmlGenerator.generateVideo = (parent, id, clazz, appendFlag, attributes = {}, sources = {}, tracks = {}) => {
+    let audio = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.video, id, clazz, appendFlag, attributes);
+    HtmlGenerator.generateInnerElements(audio, null, true, sources, HtmlGenerator.generateSource);
+    HtmlGenerator.generateInnerElements(audio, null, true, tracks, HtmlGenerator.generateTrack);
     return audio;
 };
 
@@ -459,9 +479,23 @@ HtmlGenerator.generateAudio = (parent, id, clazz, appendFlag, attributes = {}, s
 HtmlGenerator.generateSource = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.source, id, clazz, appendFlag, attributes);
 };
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateTrack = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.source, id, clazz, appendFlag, attributes);
+};
+
 //endregion
 
-//region BASIC HTML DOCUMENT TAGS [head, body, html,...]
+//region BASIC HTML DOCUMENT TAGS [head, body, html, link, meta, title]
 /**
  *
  * @param parent
@@ -497,6 +531,19 @@ HtmlGenerator.generateHead = (parent, id, clazz, appendFlag, attributes = {}) =>
  * @param attributes
  * @returns {*}
  */
+HtmlGenerator.generateTitle = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.title, id, clazz, true, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
 HtmlGenerator.generateHtml = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.html, id, clazz, true, attributes);
 };
@@ -514,6 +561,57 @@ HtmlGenerator.generateLink = (parent, id, clazz, appendFlag, attributes = {}) =>
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.link, id, clazz, true, attributes);
 };
 
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateMeta = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.meta, id, clazz, true, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateNoScript = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.noScript, id, clazz, true, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateScript = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.script, id, clazz, true, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateStyle = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.style, id, clazz, true, attributes);
+};
 //endregion
 
 //region CANVAS
@@ -607,6 +705,59 @@ HtmlGenerator.generateDataList = (parent, id, clazz, appendFlag, attributes = {}
 HtmlGenerator.generateOption = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.select.option, id, clazz, appendFlag, attributes);
 };
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param optionAttributes
+ * @returns {*}
+ */
+HtmlGenerator.generateOptionGroup = (parent, id, clazz, appendFlag, attributes = {}, optionAttributes = {}) => {
+    let group = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.select.optGroup, id, clazz, appendFlag, attributes);
+    HtmlGenerator.generateInnerElements(group, null, true, optionAttributes, HtmlGenerator.generateOption);
+    return group;
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param optionAttributes
+ * @returns {*}
+ */
+HtmlGenerator.generateSelect = (parent, id, clazz, appendFlag, attributes = {}, optionAttributes = {}) => {
+    let select = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.select.select, id, clazz, appendFlag, attributes);
+    HtmlGenerator.generateInnerElements(select, null, true, optionAttributes, HtmlGenerator.generateOption);
+    return select;
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param optionGroupAttributes
+ * @param optionAttributes
+ * @returns {*}
+ */
+HtmlGenerator.generateSelectWithOptionGroups = (parent, id, clazz, appendFlag, attributes = {}, optionGroupAttributes = {}, optionAttributes = {}) => {
+    let select = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.select.select, id, clazz, appendFlag, attributes);
+    $.each(optionGroupAttributes, (k, optGroupAttr) => {
+        if (optionAttributes[k])
+            HtmlGenerator.generateOptionGroup(select, null, null, true, optGroupAttr, optionAttributes[k]);
+    });
+    return select;
+};
+
 //endregion
 
 //region LIST DEFINITIONS  [ul, ol, li]
@@ -711,6 +862,20 @@ HtmlGenerator.generateKeyGen = (parent, id, clazz, appendFlag, attributes = {}) 
 HtmlGenerator.generateLabel = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.label, id, clazz, appendFlag, attributes);
 };
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateTextArea = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.textArea, id, clazz, appendFlag, attributes);
+};
+
 //endregion
 
 //region DESCRIPTION LIST DEFINITION
@@ -767,6 +932,19 @@ HtmlGenerator.generateDescriptionList = (parent, id, clazz, appendFlag, attribut
 HtmlGenerator.generateDetails = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.details, id, clazz, appendFlag, attributes);
 };
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateSummary = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.summary, id, clazz, appendFlag, attributes);
+};
 //endregion
 
 //region DEFINING INSTANCE DEFINITION
@@ -799,7 +977,7 @@ HtmlGenerator.generateDialog = (parent, id, clazz, appendFlag, attributes = {}) 
 };
 //endregion
 
-//region DIV CONTAINER DEFINITION
+//region CONTAINER DEFINITIONS [div, nav]
 /**
  *
  * @param parent
@@ -811,6 +989,58 @@ HtmlGenerator.generateDialog = (parent, id, clazz, appendFlag, attributes = {}) 
  */
 HtmlGenerator.generateDiv = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.div, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateNav = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.nav, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateSection = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.section, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateParagraph = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.p, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateSpan = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.span, id, clazz, appendFlag, attributes);
 };
 //endregion
 
@@ -838,8 +1068,34 @@ HtmlGenerator.generateBoldText = (parent, id, clazz, appendFlag, attributes = {}
  * @param attributes
  * @returns {*}
  */
+HtmlGenerator.generateStrongText = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.strong, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
 HtmlGenerator.generateItalicText = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.i, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateUnerlinedText = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.u, id, clazz, appendFlag, attributes);
 };
 
 /**
@@ -933,6 +1189,18 @@ HtmlGenerator.generateLineBreak = (parent, id, clazz, appendFlag, attributes = {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.br, id, clazz, appendFlag, attributes);
 };
 
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateWordBreakOpportunity = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.wbr, id, clazz, appendFlag, attributes);
+};
 
 /**
  *
@@ -973,6 +1241,136 @@ HtmlGenerator.generateKeyboardText = (parent, id, clazz, appendFlag, attributes 
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.kbd, id, clazz, appendFlag, attributes);
 };
 
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateMarkedText = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.mark, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateOutput = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.output, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generatePreFormattedText = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.pre, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateQuote = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.q, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateIncorrectText = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.s, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateSampleOutput = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.samp, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateSmallText = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.small, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateSubscriptText = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.sub, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateVariable = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.var, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateTimeText = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.time, id, clazz, appendFlag, attributes);
+};
+
 //endregion
 
 //region EMBEDDED ELEMENTS DEFINITIONS
@@ -988,6 +1386,36 @@ HtmlGenerator.generateKeyboardText = (parent, id, clazz, appendFlag, attributes 
 HtmlGenerator.generateEmbeddedElement = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.embed, id, clazz, appendFlag, attributes);
 };
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param paramAttributes
+ * @returns {*}
+ */
+HtmlGenerator.generateObject = (parent, id, clazz, appendFlag, attributes = {}, paramAttributes = {}) => {
+    let object = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.object, id, clazz, appendFlag, attributes);
+    HtmlGenerator.generateInnerElements(object, null, true, paramAttributes, HtmlGenerator.generateParam);
+    return object;
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateParam = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.param, id, clazz, appendFlag, attributes);
+};
+
 //endregion
 
 //region FIELD SET DEFINITIONS
@@ -1068,12 +1496,41 @@ HtmlGenerator.generateImage = (parent, id, clazz, appendFlag, attributes = {}) =
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.img, id, clazz, appendFlag, attributes);
 };
 
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param mapAttributes
+ * @param areaAttributes
+ * @returns {*}
+ */
 HtmlGenerator.generateImageWithMap = (parent, id, clazz, appendFlag, attributes = {}, mapAttributes = {}, areaAttributes = {}) => {
     if (!mapAttributes || !mapAttributes.name) return null;
     attributes.usemap = mapAttributes.name;
     let map = HtmlGenerator.generateMap(parent, null, null, true, mapAttributes, areaAttributes);
     let img = HtmlGenerator.generateImage(parent, id, clazz, appendFlag, attributes);
     return [img, map];
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param sourceAttributes
+ * @param imageAttributes
+ * @returns {*}
+ */
+HtmlGenerator.generatePicture = (parent, id, clazz, appendFlag, attributes = {}, sourceAttributes = {}, imageAttributes = {}) => {
+    let picture = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.picture, id, clazz, appendFlag, attributes);
+    HtmlGenerator.generateInnerElements(picture, null, true, sourceAttributes, HtmlGenerator.generateSource);
+    HtmlGenerator.generateImage(picture, null, null, true, imageAttributes);
+    return picture;
 };
 
 //endregion
@@ -1254,3 +1711,59 @@ HtmlGenerator.generateIFrame = (parent, id, clazz, appendFlag, attributes = {}) 
 }
 //endregion
 
+//region MENU DEFINITIONS
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ */
+HtmlGenerator.generateMenuItem = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.menu.menuItem, id, clazz, appendFlag, attributes);
+}
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param menuItemAttributes
+ * @returns {*}
+ */
+HtmlGenerator.generateMenu = (parent, id, clazz, appendFlag, attributes = {}, menuItemAttributes = {}) => {
+    let menu = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.iFrame, id, clazz, appendFlag, attributes);
+    HtmlGenerator.generateInnerElements(menu, null, true, menuItemAttributes, HtmlGenerator.generateMenuItem);
+    return menu;
+}
+//endregion
+
+
+//region PROGRESS BAR / METER
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ */
+HtmlGenerator.generateMeter = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.meter, id, clazz, appendFlag, attributes);
+}
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ */
+HtmlGenerator.generateProgress = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.progress, id, clazz, appendFlag, attributes);
+}
+//endregion
