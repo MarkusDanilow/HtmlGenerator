@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML Generator (neu) [Test]</title>
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"
+            type="text/javascript"></script>
+    <script src="js/HtmlGenerator.js"
+            type="text/javascript"></script>
+
+    <style>
+        div {
+            width: 300px;
+            height: 100px;
+            margin: 10px;
+            float: left;
+        }
+
+        #div-1 {
+            background: red;
+        }
+
+        #div-2 {
+            background: green;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="myDiv1" id="div-1">
+</div>
+
+<script>
+
+    let list = HtmlGenerator.generateDataList($('#div-1'), 'list1', '', true, null, ['Option1', 'Option2', 'Option3'], {list: 'list1', id: 'my-list-input'});
+
+</script>
+
+</body>
+</html>
