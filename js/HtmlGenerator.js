@@ -627,4 +627,16 @@ HtmlGenerator.generateDescriptionTopic = (parent, id, clazz, appendFlag, attribu
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.description.dt, id, clazz, appendFlag, attributes);
 };
 
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateDescriptionList = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.description.dl, id, clazz, appendFlag, attributes);
+};
 
