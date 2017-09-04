@@ -22,7 +22,7 @@ $(document).ready(function () {
 });
 ```    
 
-The first parameter defines the parent element the DIV will be attached to. In this example the DIV will be attached directly to the body. The second parameter is the ID, the third one may contain a string of CSS classes. The fourth parameter defines, whether the element shall be appended (true) or prepended (false) to the parent element. Last but not least a JSON object can be passed to the method, allowing you to specify additional attributes or defining the text, that shall be displayed inside the element.
+The first parameter defines the parent element, to which the DIV will be attached. In this example the DIV will be added directly to the body element. The second parameter is the ID, the third one may contain a string of CSS classes. The fourth parameter defines, whether the element shall be appended (true) or prepended (false) to the parent element. Last but not least a JSON object can be passed to the method, allowing you to specify additional attributes or defining the text, that shall be displayed inside the element.
 
 For detailed information you can have a look at the Wiki.
 
