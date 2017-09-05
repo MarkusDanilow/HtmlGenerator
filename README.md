@@ -1,10 +1,13 @@
 # HtmlGenerator
 
 ## Introduction
-Using this library you can easily generate HTML elements during the runtime of your web application. 
-ECMAScript 6 is required as well as jQuery 3.1.1 or higher.
+This library allows you to easily generate HTML elements in your web application at any time using JavaScript and jQuery.
+Especially for Single-page applications, where you might have to update the content of your page dynamically - e.g. after an asynchronous request to the server - without having the page to reload, this can be pretty helpful. Using this library you won't have to include plain HTML code inside your JavaScript files anymore. And you also don't have to deal with the standard methods like "document.createElement()" any longer, where you would laboriously need to set every attribute for every single element you'd like to create by yourself. 
+
+Every method takes a fix set of parameters like the ID of the element, a bunch of CSS class names or the parent element and will return a jQuery object of the new HTML element. You can specify further attributes by additionally passing in a JSON object.
 
 ## Usage
+For usage, ECMAScript 6 is required as well as jQuery 3.1.1 or higher.
 Include jQuery and the minified version of the HtmlGenerator in your HTML file.
 
 ```
