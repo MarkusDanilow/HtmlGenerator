@@ -50,7 +50,7 @@ HtmlGenerator.generateComplexTable($('body'), 'table-id', 'table-clazz', true, n
                 row4: ['4565088253', '9904886932', '0215560389']
             }, {}, {});
 ```
-The sixth parameter defines the number of rows the table should have, where special attributes for each row can be set. The next parameter is the set of data that will be displayed inside the table. The last two parameters are empty in this example. They define the attributes for the table header and footer. As soon as they are set, the first row will be converted into the table header, the last row will be interpreted as table footer. Otherwise header and footer won't be present inside the table.
+The sixth parameter defines the number of rows the table should have, where special attributes for each row can be set. The next parameter is the set of data that will be displayed inside the table. The last two parameters are empty in this example. They define the attributes for the table header and footer. As soon as they are set, the first row will be converted into the table header, the last row will be interpreted as table footer. Otherwise header and footer will not be generated.
 
 
 For more information you can check out the Wiki where all methods are explained in detail.
