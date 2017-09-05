@@ -28,7 +28,7 @@
  *  This library allows you to easily generate all kinds of HTML elements using JavaScript and jQuery.
  *  Notice: ECMAScript6 is required!
  *
- * TODO: Support for <rt>, <rp>, <ruby>, [<table>, <tbody>, <td>, <tfoot>, <th>, <thead>, <tr>]
+ * TODO: Support for <rt>, <rp>, <ruby>
  */
 //region CONSTRUCTOR
 function HtmlGenerator() {
@@ -250,7 +250,7 @@ HtmlGenerator.addToParent = (parent, child, appendFlag) => {
         else parent.prepend(child);
     }
     return child;
-}
+};
 
 /**
  *
@@ -465,6 +465,7 @@ HtmlGenerator.generateAside = (parent, id, clazz, appendFlag, attributes = {}) =
  * @param appendFlag
  * @param attributes
  * @param sources
+ * @param tracks
  * @returns {*}
  */
 HtmlGenerator.generateAudio = (parent, id, clazz, appendFlag, attributes = {}, sources = {}, tracks = {}) => {
@@ -482,6 +483,7 @@ HtmlGenerator.generateAudio = (parent, id, clazz, appendFlag, attributes = {}, s
  * @param appendFlag
  * @param attributes
  * @param sources
+ * @param tracks
  * @returns {*}
  */
 HtmlGenerator.generateVideo = (parent, id, clazz, appendFlag, attributes = {}, sources = {}, tracks = {}) => {
@@ -1718,7 +1720,7 @@ HtmlGenerator.generateHeading6 = (parent, id, clazz, appendFlag, attributes = {}
  */
 HtmlGenerator.generateHorizontalLine = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.hr, id, clazz, appendFlag, attributes);
-}
+};
 //endregion
 
 //region I-FRAME
@@ -1732,7 +1734,7 @@ HtmlGenerator.generateHorizontalLine = (parent, id, clazz, appendFlag, attribute
  */
 HtmlGenerator.generateIFrame = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.iFrame, id, clazz, appendFlag, attributes);
-}
+};
 //endregion
 
 //region MENU DEFINITIONS
@@ -1746,7 +1748,7 @@ HtmlGenerator.generateIFrame = (parent, id, clazz, appendFlag, attributes = {}) 
  */
 HtmlGenerator.generateMenuItem = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.menu.menuItem, id, clazz, appendFlag, attributes);
-}
+};
 
 /**
  *
@@ -1762,7 +1764,7 @@ HtmlGenerator.generateMenu = (parent, id, clazz, appendFlag, attributes = {}, me
     let menu = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.iFrame, id, clazz, appendFlag, attributes);
     HtmlGenerator.generateInnerElements(menu, null, true, menuItemAttributes, HtmlGenerator.generateMenuItem);
     return menu;
-}
+};
 //endregion
 
 
@@ -1777,7 +1779,7 @@ HtmlGenerator.generateMenu = (parent, id, clazz, appendFlag, attributes = {}, me
  */
 HtmlGenerator.generateMeter = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.meter, id, clazz, appendFlag, attributes);
-}
+};
 
 /**
  *
@@ -1789,5 +1791,150 @@ HtmlGenerator.generateMeter = (parent, id, clazz, appendFlag, attributes = {}) =
  */
 HtmlGenerator.generateProgress = (parent, id, clazz, appendFlag, attributes = {}) => {
     return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.progress, id, clazz, appendFlag, attributes);
-}
+};
+//endregion
+
+//region TABLE STUFF
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ */
+HtmlGenerator.generateEmptyTable = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.table.table, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param rowAttributes
+ * @param dataAttributes
+ */
+HtmlGenerator.generateSimpleTable = (parent, id, clazz, appendFlag, attributes = {}, rowAttributes = {}, dataAttributes = {}) => {
+    let table = HtmlGenerator.generateEmptyTable(parent, id, clazz, appendFlag, attributes);
+    if (rowAttributes) {
+        $.each(rowAttributes, (k, attributes) => {
+            HtmlGenerator.generateTableRow(table, null, null, true, attributes, dataAttributes[k]);
+        });
+    }
+    return table;
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param rowAttributes
+ * @param dataAttributes
+ * @param headerAttributes
+ * @param footerAttributes
+ */
+HtmlGenerator.generateComplexTable = (parent, id, clazz, appendFlag, attributes = {}, rowAttributes = {}, dataAttributes = {}, headerAttributes = null, footerAttributes = null) => {
+    let table = HtmlGenerator.generateEmptyTable(parent, id, clazz, appendFlag, attributes);
+    let body = HtmlGenerator.generateTableBody(table, null, null, true, null);
+    const mindHeader = (headerAttributes !== null && headerAttributes !== undefined );
+    const mindFooter = (footerAttributes !== null && footerAttributes !== undefined );
+    if (rowAttributes) {
+        let index = 0;
+        let numAttributes = HtmlGenerator.getObjectSize(rowAttributes);
+        $.each(rowAttributes, (k, attributes) => {
+            if (index <= 0 && mindHeader)
+                HtmlGenerator.generateTableHeader(table, null, null, true, headerAttributes, attributes, dataAttributes[k]);
+            else if (index >= numAttributes - 1 && mindFooter)
+                HtmlGenerator.generateTableFooter(table, null, null, true, footerAttributes, attributes, dataAttributes[k]);
+            else
+                HtmlGenerator.generateTableRow(body, null, null, true, attributes, dataAttributes[k]);
+            index++;
+        });
+    }
+    return table;
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ */
+HtmlGenerator.generateTableData = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.table.td, id, clazz, appendFlag, attributes);
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param dataAttributes
+ * @returns {*}
+ */
+HtmlGenerator.generateTableRow = (parent, id, clazz, appendFlag, attributes = {}, dataAttributes = {}) => {
+    let row = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.table.tr, id, clazz, appendFlag, attributes);
+    HtmlGenerator.generateInnerElements(row, null, true, HtmlGenerator.convertArrayToObject(dataAttributes), HtmlGenerator.generateTableData);
+    return row;
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param rowAttributes
+ * @param dataAttributes
+ * @returns {*}
+ */
+HtmlGenerator.generateTableHeader = (parent, id, clazz, appendFlag, attributes = {}, rowAttributes = {}, dataAttributes = {}) => {
+    let header = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.table.tHead, id, clazz, appendFlag, attributes);
+    HtmlGenerator.generateTableRow(header, null, null, true, rowAttributes, dataAttributes);
+    return header;
+};
+
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @param rowAttributes
+ * @param dataAttributes
+ * @returns {*}
+ */
+HtmlGenerator.generateTableFooter = (parent, id, clazz, appendFlag, attributes = {}, rowAttributes = {}, dataAttributes = {}) => {
+    let footer = HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.table.tFoot, id, clazz, appendFlag, attributes);
+    HtmlGenerator.generateTableRow(footer, null, null, true, rowAttributes, dataAttributes);
+    return footer;
+};
+
+/**
+ *
+ * @param parent
+ * @param id
+ * @param clazz
+ * @param appendFlag
+ * @param attributes
+ * @returns {*}
+ */
+HtmlGenerator.generateTableBody = (parent, id, clazz, appendFlag, attributes = {}) => {
+    return HtmlGenerator.generateBasicHtmlElement(parent, HtmlGenerator.elementTypes.table.tBody, id, clazz, appendFlag, attributes);
+};
+
+
 //endregion
