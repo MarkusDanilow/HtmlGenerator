@@ -27,8 +27,20 @@ $(document).ready(function () {
 
 The first parameter defines the parent element, to which the DIV will be attached. In this example the DIV will be added directly to the body element. The second parameter is the ID, the third one may contain a string of CSS classes. The fourth parameter defines, whether the element shall be appended (true) or prepended (false) to the parent element. Last but not least a JSON object can be passed to the method, allowing you to specify additional attributes or defining the text, that shall be displayed inside the element.
 
+## Examples
+The HtmlGenerator is able to generate more than just some simple DIV containers. 
+
+1) In our first example we create an unordered list with an array of values. Each entry of array will be automatically converted into a new list item.
+```
+HtmlGenerator.generateUnorderedList($('body'), null, null, true, null, ['hello', 'world', 'cat', 'dog']);
+```
+I case you want to change the list to an ordered list, you only need to call another method with the same parameters
+```
+HtmlGenerator.generateOrderedList($('body'), null, null, true, null, ['hello', 'world', 'cat', 'dog']);
+```
+
 For more information you can check out the Wiki where all methods are explained in detail.
 
 ## ToDo
-- Tables and Ruby tags are not supported yet
+- Ruby tags are not supported yet
 - Detailed documentation in the Wiki will follow soon 
