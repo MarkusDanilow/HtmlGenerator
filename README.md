@@ -34,10 +34,24 @@ The HtmlGenerator is able to generate more than just some simple DIV containers.
 ```
 HtmlGenerator.generateUnorderedList($('body'), null, null, true, null, ['hello', 'world', 'cat', 'dog']);
 ```
-I case you want to change the list to an ordered list, you only need to call another method with the same parameters
+2) In case you want to change the list to an ordered list, you only need to call another method with the same parameters
 ```
 HtmlGenerator.generateOrderedList($('body'), null, null, true, null, ['hello', 'world', 'cat', 'dog']);
 ```
+
+3) In our third and last example we create an entire table, including the table header and footer.
+```
+HtmlGenerator.generateComplexTable($('body'), 'table-id', 'table-clazz', true, null, {
+                row1: null, row2: null, row3: null, row4: null
+            }, {
+                row1: ['3358401189', '1309088976', '45215948291'],
+                row2: ['9904886932', '9829828243', '9423549128'],
+                row3: ['0513617939', '0215560389', '0943336182'],
+                row4: ['4565088253', '9904886932', '0215560389']
+            }, {}, {});
+```
+The sixth parameter defines the number of rows the table should have, where special attributes for each row can be set. The next parameter is the set of data that will be displayed inside the table. The last two parameters are empty in this example. They define the attributes for the table header and footer. As soon as they are set, the first row will be converted into the table header, the last row will be interpreted as table footer. Otherwise header and footer won't be present inside the table.
+
 
 For more information you can check out the Wiki where all methods are explained in detail.
 
