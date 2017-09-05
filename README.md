@@ -12,7 +12,7 @@ Include jQuery and the minified version of the HtmlGenerator in your HTML file.
 <script src="dist/HtmlGenerator.min.js" type="text/javascript"></script>
 ```
 
-Afterwards you can invoke the methods for generating different HTML elements at any time. Either directly when the page has been loaded, or as a response on certain events that take place in your application, e.g. click events or Ajax requests.
+Afterwards you can invoke the methods for generating different HTML elements at any time. Either directly when the page has been loaded, or as a response on certain events that take place in your application, e.g. after click events or Ajax requests.
 
 If you want to generate a new DIV element you can achieve this be calling the method *generateDiv()* 
 
